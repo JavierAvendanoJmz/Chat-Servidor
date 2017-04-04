@@ -23,16 +23,29 @@ public class ClienteHilo extends Thread {
     Socket cliente;
     ObjectInputStream reader;
     ObjectOutputStream writer;
+    Boolean conectado;
 
     public ClienteHilo(Socket cliente,Envio envio) throws IOException {
         this.cliente = cliente;
         this.envio = envio;
         reader = new ObjectInputStream(cliente.getInputStream());
         writer = new ObjectOutputStream(cliente.getOutputStream());
+        conectado = true;
     }
     
     public void enviarMensaje(String s) throws IOException {
         writer.writeObject(s);
+    }
+    
+    public void terminarConeccion() {
+        try {
+            cliente.close();
+            reader.close();
+            writer.close();
+            conectado = false;
+        } catch (Exception ex1) {
+
+        }
     }
 
     @Override
@@ -43,15 +56,13 @@ public class ClienteHilo extends Thread {
 //                enviarMensaje(s);
                 envio.enviar(s);
             } catch (Exception ex) {
-                try {
-                    cliente.close();
-                    reader.close();
-                    writer.close();
-                } catch (Exception ex1) {
-                    
-                }
+                terminarConeccion();
             }
         }
+    }
+
+    public Boolean getConectado() {
+        return conectado;
     }
     
     

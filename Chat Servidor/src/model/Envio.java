@@ -37,5 +37,11 @@ public class Envio {
     public int size() {
         return lista.getSize();
     }
+
+    public Lista<ClienteHilo> getLista() {
+        return lista;
+    }
+    
+    
     
 }
